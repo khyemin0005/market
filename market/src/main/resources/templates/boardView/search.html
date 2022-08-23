@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html xmlns:th="http://thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+<script th:src="@{/js/jquery-3.6.0.js}"></script>
+<script>
+	$(document).ready(function() {
+		init();
+		
+		$('#category').click(function() {
+			let category = $(this).val();
+			
+			console.log(category);
+			
+			$('#searchWord').val('');
+			
+			$.ajax({
+			    url: 'boardList',
+			    type: 'get',
+			    data: { category: category },
+			    success: output,
+		        error: function(e){
+		            alert(JSON.stringify(e));
+		        }
+			});
+		});
+
+		$('#searchWord').keyup(function() {
+			let category = $(this).val();
+			let searchWord = $(this).val();
+			
+			console.log(category);
+			console.log(searchWord);
+			
+			$.ajax({
+			    url: 'boardList',
+			    type: 'get',
+			    data: $('#searchForm').serialize(),
+			    success: output,
+		        error: function(e){
+		            alert(JSON.stringify(e));
+		        }
+			});
+		});
+	});
+	
+	function init() {
+		$.ajax({
+			url: 'boardList',
+			type: 'get',
+			dataType: 'json',
+			success: output,
+			error: function() {
+				alert('error');
+			}
+		});
+	}
+	
+	function output(boardList) {
+		var s = '<table>';
+			s += '<tr>';
+			s +=	'<th style="width: 50px">번호</th>';
+			s +=	'<th style="width: 90px">카테고리</th>';
+			s +=	'<th style="width: 350px">제목</th>';
+			s += '</tr>';
+			$.each(boardList, function(index, item) {
+				s += '<tr>';
+				s +=	'<td>' + item.boardnum + '</td>';
+				s +=	'<td>' + item.category + '</td>';
+				s +=	'<td>' + item.title + '</td>';
+				s += '</tr>';
+			});
+		s += '</table>';
+		
+		$('#output').html(s);
+	}
+
+</script>
+</head>
+<body>
+	<h1>[ 판매 상품 검색 ]</h1>
+	
+	<!-- 검색폼 -->
+	<form id="searchForm">
+		<select name="category" id="category">
+			<option value="all" th:selected="${category} == 'all'">전체</option>
+			<option value="computer" th:selected="${category} == 'computer'">컴퓨터 및 주변기기</option>
+			<option value="camera" th:selected="${category} == 'camera'">카메라</option>
+			<option value="car" th:selected="${category} == 'car'">자동차 용품</option>
+		</select>
+		<input type="text" id="searchWord" name="searchWord" th:value="${searchWord}">
+	</form>
+	<br><br>
+	<!-- <table>
+		<tr>
+			<th style="width: 50px">번호</th>
+			<th style="width: 90px">카테고리</th>
+			<th style="width: 350px">제목</th>
+		</tr>
+		<tr th:each=" list:${boardList}">
+			<td th:text="${list.boardnum}" class="center"></td>
+			<td th:text="${list.category}" class="center"></td>
+			<td th:text="${list.title}"></td>
+		</tr>
+	</table> -->
+	
+	<div id="output"></div>
+</body>
+</html>

@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html xmlns:th="http://thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+<style>
+	.center {
+		text-align: center;
+	}
+</style>
+<script th:src="@{/js/jquery-3.6.0.js}"></script>
+<script>
+	$(document).ready(function() {
+		$('#memberid').keyup(event);
+		$('#memberid').focusout(idFocusout);
+		$('#memberpw').focusout(pwFocusout);
+		$('#membername').focusout(nameFocusout);
+		$('#phone').focusout(phoneFocusout);
+	});
+	
+	function idFocusout() {
+		let id = $('#memberid').val();
+
+		console.log(id);
+		
+		if(id.length < 3 || id.length > 10) {
+			alert('ID는 3~10자로 입력하세요.');
+			return;
+		}
+	}
+
+	function pwFocusout() {
+		let pw = $('#memberpw').val();
+		
+		console.log(pw);
+		console.log(pw.length);
+		
+		if(pw.length < 3 || pw.length > 10) {
+			alert('비밀번호는는 3~10자로 입력하세요.');
+			return;
+		}
+	}
+
+	function nameFocusout() {
+		let name = $('#membername').val();
+		
+		console.log(name);
+		
+		if(name == '') {
+			alert('이름을 입력하세요.');
+		}
+	}
+
+	function phoneFocusout() {
+		let phone = $('#phone').val();
+		
+		console.log(phone);
+		
+		if(phone == '') {
+			alert('전화번호를 입력하세요.');
+		}
+	}
+</script>
+</head>
+<body>
+	<h2>[ 회원가입 ]</h2>
+	<form th:action=@{/member/join} method="post">
+		<table>
+			<tr>
+				<th>ID</th>
+				<td><input type="text" name="memberid" id="memberid"></td>
+			</tr>
+			<tr>
+				<th>비밀번호</th>
+				<td><input type="password" name="memberpw" id="memberpw"></td>
+			</tr>
+			<tr>
+				<th>이름</th>
+				<td><input type="text" name="membername" id="membername"></td>
+			</tr>
+			<tr>
+				<th>전화번호</th>
+				<td><input type="text" name="phone" id="phone"></td>
+			</tr>
+			<tr>
+				<td colspan="2" class="center">
+					<input type="submit" value="가입">
+					<input type="reset" value="다시 쓰기">
+				</td>
+			</tr>
+		</table>
+	</form>
+</body>
+</html>

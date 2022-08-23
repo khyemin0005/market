@@ -1,0 +1,140 @@
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="net.softsociety.exam.dao.BoardDAO">
+
+<!--판매글 저장 -->
+<insert id="insertBoard" parameterType="Board">
+	INSERT INTO market_board
+		(
+			boardnum
+			, memberid
+			, title
+			, contents
+			, category
+		)
+		VALUES
+		(
+			market_board_seq.NEXTVAL
+			, #{memberid}
+			, #{title}
+			, #{contents}
+			, #{category}
+		)
+</insert>
+
+<select id="selectAll" resultType="Board">
+	SELECT * 
+	FROM 
+		market_board
+	WHERE
+		soldout = 'N'
+	ORDER BY 
+		boardnum DESC
+</select>
+
+<select id="selectOne" parameterType="int" resultType="Board">
+	SELECT * FROM market_board WHERE boardnum = #{boardnum}
+</select>
+
+<delete id="deleteBoard" parameterType="Board">
+	DELETE FROM market_board
+	WHERE
+		boardnum = #{boardnum}
+		AND
+		memberid = #{memberid}
+</delete>
+
+<update id="updateBoard" parameterType="Board">
+	UPDATE market_board
+	SET
+		soldout = #{soldout}
+		, buyerid = #{buyerid}
+	WHERE
+		boardnum = #{boardnum}
+</update>
+
+
+<!-- Reply -->
+<insert id="insertReply" parameterType="Reply">
+	INSERT INTO market_reply
+		(
+			replynum
+			, boardnum
+			, memberid
+			, replytext
+		)
+		VALUES
+		(
+			market_reply_seq.NEXTVAL
+			, #{boardnum}
+			, #{memberid}
+			, #{replytext}
+		)
+</insert>
+
+<select id="selectReply" parameterType="int" resultType="Reply">
+	SELECT * FROM market_reply WHERE boardnum = #{boardnum} ORDER BY inputdate
+</select>
+
+<!-- 글목록 -->
+<select id="selectSearch" parameterType="map" resultType="Board">
+	SELECT 
+		boardnum
+		, category
+		, title
+	FROM
+		market_board
+	
+	<if test="category != null and searchWord == null">
+	<where>
+		<if test="category == 'all'">
+			category = 'computer'
+			OR category = 'camera'
+			OR category = 'car'
+		</if>
+		<if test="category == 'computer'">
+			category = 'computer'
+		</if>
+		<if test="category == 'camera'">
+			category = 'camera'
+		</if>
+		<if test="category == 'car'">
+			category = 'car'
+		</if>
+	</where>
+	</if>
+	
+	<if test="category != null and searchWord != null">
+	<where>
+		<if test="category == 'all'">
+			UPPER(title) like '%' || UPPER(#{searchWord}) || '%'
+			AND (
+			category = 'computer'
+			OR category = 'camera'
+			OR category = 'car'
+			)
+		</if>
+		<if test="category == 'computer'">
+			UPPER(title) like '%' || UPPER(#{searchWord}) || '%'
+			AND
+			category = 'computer'
+		</if>
+		<if test="category == 'camera'">
+			UPPER(title) like '%' || UPPER(#{searchWord}) || '%'
+			AND
+			category = 'camera'
+		</if>
+		<if test="category == 'car'">
+			UPPER(title) like UPPER(#{searchWord})
+			AND
+			category = 'car'
+		</if>
+	</where>
+	</if>
+	ORDER BY
+		boardnum DESC
+</select>
+
+</mapper>

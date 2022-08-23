@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html xmlns:th="http://thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+<style>
+	.center {
+		text-align: center;
+	}
+</style>
+</head>
+<body>
+	<h1>[ 판매 정보 게시판 ]</h1>
+	
+	<div sec:authorize="isAuthenticated()">
+		<p><a th:href="@{/board/write}">판매글 등록</a></p>
+	</div>
+	<br>
+	<!-- [[${boardList}]] -->
+	<!-- 판매중인 정보만 출력되도록! -->
+	<table>
+		<tr>
+			<th style="width: 50px">번호</th>
+			<th style="width: 350px">제목</th>
+			<th style="width: 50px">작성자</th>
+		</tr>
+		<tr th:each=" list:${boardList}">
+			<td th:text="${list.boardnum}" class="center"></td>
+			<td><a th:text="${list.title}" th:href="@{/board/read(boardnum=${list.boardnum})}"></a></td>
+			<td th:text="${list.memberid}" class="center"></td>
+		</tr>
+	</table>
+</body>
+</html>
