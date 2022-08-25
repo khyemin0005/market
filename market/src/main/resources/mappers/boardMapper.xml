@@ -133,6 +133,8 @@
 		</if>
 	</where>
 	</if>
+	WHERE
+		soldout = 'N'
 	ORDER BY
 		boardnum DESC
 </select>
