@@ -4,32 +4,66 @@
 <head>
 <meta charset="UTF-8">
 <title>market</title>
+<style>
+	.titleImg {
+		height: 100px;
+		padding-top: 50px;
+		font-size: 30px;
+		text-align: center;
+		background-image: url("./image/street.jpg");
+	}
+	
+	.menu {
+		margin: 10px 20px;
+		text-align: right;
+	}
+	
+	#joinButton {
+		color: #666666;
+		text-align: right;
+		display: inline-block;
+	}
+	
+	a:link {color: #000000; text-decoration: none;}
+	a:visited {color: #000000; text-decoration: none;}
+	#joinButton:hover {text-decoration: underline;}
+	
+</style>
 <script th:src="@{/js/jquery-3.6.0.js}"></script>
 
 </head>
 <body>
-	<h1>[ 중고 거래 사이트 ]</h1>
-	<!-- <ul>
-		<li><a th:href="@{/member/join}">회원가입</a></li>
-		<li><a th:href="@{/member/login}">로그인</a></li>
-		이곳에 추가하여 작성하세요.
-	</ul> -->
-
+	<div class="header">
+		<div class="titleImg">
+			<a th:href="@{/}" style="color: black">[ 중고 거래 사이트 ]</a>
+		</div>
+		
+		<hr>
+		<div class="menu" sec:authorize="not isAuthenticated()">
+			<b><a th:href=@{/member/join}>회원가입</a></b> |
+			<b><a th:href="@{/member/login}">로그인</a></b>
+		</div>
+		<div class="menu" sec:authorize="isAuthenticated()">
+			<b><a th:text="${#authentication.name}"></a> 님</b> |
+			<b><a th:href="@{/member/logout}">로그아웃</a></b>
+		</div>
+		<hr>
+	</div>
+	<img src="/img/street.jpg">
+	<hr>
 	<div sec:authorize="not isAuthenticated()">
 		<ul>
-			<li><a th:href="@{/member/join}">회원가입</a></li>
-			<li><a th:href="@{/member/login}">로그인</a></li>
 			<li><a th:href="@{/board/list}">판매정보 게시판</a></li>
 			<li><a th:href="@{/board/search}">판매상품 검색</a></li>
-		</ul>
+		</ul>              
 	</div>
 	<div sec:authorize="isAuthenticated()">
 		<ul>
-			<li><a th:href="@{/member/logout}">로그아웃</a></li>
 			<li><a th:href="@{/board/list}">판매정보 게시판</a></li>
 			<li><a th:href="@{/board/search}">판매상품 검색</a></li>
 		</ul>
 	</div>
+	<hr>
 
 </body>
 </html>
